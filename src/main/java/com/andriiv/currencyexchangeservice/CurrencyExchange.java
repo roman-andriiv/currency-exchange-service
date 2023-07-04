@@ -1,6 +1,8 @@
 package com.andriiv.currencyexchangeservice;
 
-import lombok.AllArgsConstructor;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,11 +11,15 @@ import java.math.BigDecimal;
 /**
  * Created by Roman Andriiv (04.07.2023 - 10:34)
  */
+@Entity
 @Data
 @NoArgsConstructor
 public class CurrencyExchange {
+    @Id
     private Long id;
+    @Column(name = "_from")
     private String from;
+    @Column(name = "_to")
     private String to;
     private BigDecimal conversionMultiple;
     private String environment;
