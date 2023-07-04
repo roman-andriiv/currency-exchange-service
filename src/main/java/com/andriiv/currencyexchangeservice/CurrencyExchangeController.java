@@ -14,14 +14,25 @@ import java.math.BigDecimal;
 @RestController
 public class CurrencyExchangeController {
 
+    private final Environment environment;
+    private final CurrencyExchangeRepository exchangeRepository;
+
     @Autowired
-    private Environment environment;
+    public CurrencyExchangeController(Environment environment, CurrencyExchangeRepository exchangeRepository) {
+        this.environment = environment;
+        this.exchangeRepository = exchangeRepository;
+    }
 
     @GetMapping("/currency-exchange/from/{from}/to/{to}")
     public CurrencyExchange retrieveExchangeValue(@PathVariable String from, @PathVariable String to) {
-        CurrencyExchange currencyExchange = new CurrencyExchange(1000L, from, to, BigDecimal.valueOf(50));
+
+        CurrencyExchange currencyExchange = exchangeRepository.findByFromAndTo(from, to);
+        if (currencyExchange == null) {
+            throw new RuntimeException(String.format("Unable to find data for %s to %s", from, to));
+        }
         String port = environment.getProperty("local.server.port");
         currencyExchange.setEnvironment(port);
+
         return currencyExchange;
     }
 }
